@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import fetchBooks from "./services/api-client";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BookList from "./components/BookList";
@@ -12,19 +13,28 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("Javascript");
 
   useEffect(() => {
-    fetchBooks();
+    fetchData();
     console.log(`Query:: ${searchTerm}`);
     console.log(`Books fetched::`, books);
   }, [searchTerm]);
 
-  const fetchBooks = async () => {
+  const fetchData = async () => {
     setLoading(true);
-    const response = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}`
-    );
-    const data = await response.json();
-    setBooks(data.items || []);
-    setLoading(false);
+    try {
+      const items = await fetchBooks(searchTerm);
+      setBooks(items);
+      setLoading(false);
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.log("Failed to fetch books:", error);
+      }
+    } finally {
+      setLoading(false);
+    }
+    // const response = await fetch(
+    //   `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}`
+    // );
+    // const data = await response.json();
   };
 
   const handleSearch = (query) => {
@@ -53,7 +63,7 @@ function App() {
       return;
     }
     setSearchTerm(query);
-    fetchBooks();
+    fetchData();
   };
 
   return (
