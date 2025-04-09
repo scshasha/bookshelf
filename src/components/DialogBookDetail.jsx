@@ -1,6 +1,15 @@
 const DialogBookDetail = ({ book, onClose }) => {
+  const {
+    title = "No Title Available",
+    authors = ["Unknown Authors"],
+    imageLinks = {},
+    publishedDate = "No Published Date Available",
+    description = "No Description Available",
+  } = book;
+  const thumbnail =
+    imageLinks.thumbnail || "https://placehold.co/128x193?text=Image Not Found";
+
   return (
-    // <div className="modal show d-block" tabIndex="-1" role="dialog">
     <div
       className="modal show d-block"
       id="staticBackdrop"
@@ -17,7 +26,7 @@ const DialogBookDetail = ({ book, onClose }) => {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{book.title}</h5>
+            <h5 className="modal-title">{title}</h5>
             <button
               type="button"
               className="btn-close"
@@ -27,23 +36,15 @@ const DialogBookDetail = ({ book, onClose }) => {
             ></button>
           </div>
           <div className="modal-body">
-            <img
-              className="img-fluid mb-3"
-              src={
-                book.imageLinks
-                  ? book.imageLinks.thumbnail
-                  : "https://placehold.co/128x193"
-              }
-              alt={book.title}
-            />
+            <img className="img-fluid mb-3" src={thumbnail} alt={title} />
             <p>
-              <strong>Authors:</strong> {book.authors?.join(", ")}
+              <strong>Authors:</strong> {authors?.join(", ")}
             </p>
             <p>
-              <strong>Published Date:</strong> {book.publishedDate}
+              <strong>Published Date:</strong> {publishedDate}
             </p>
             <p>
-              <strong>Description:</strong> {book.description}
+              <strong>Description:</strong> {description}
             </p>
           </div>
           <div className="modal-footer">
